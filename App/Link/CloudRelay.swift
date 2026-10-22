@@ -165,6 +165,14 @@ final class CloudRelay {
         return poll
     }
 
+    /// Owner: deletes the link zone (and with it the share and all records).
+    func deleteLink(_ link: DeviceLink) async {
+        guard link.database == .privateDB else { return }
+        let database = container.privateCloudDatabase
+        _ = try? await database.modifySubscriptions(saving: [], deleting: [Self.distressSubscriptionID])
+        _ = try? await database.modifyRecordZones(saving: [], deleting: [zoneID(link)])
+    }
+
     // MARK: Camera side
 
     /// Resolves a scanned pairing code into a link, joining the share if the

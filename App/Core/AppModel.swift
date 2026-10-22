@@ -290,6 +290,14 @@ final class AppModel {
         saveNow()
     }
 
+    /// Moves a running session's start earlier. Used by tests to simulate time passing.
+    func backdate(sessionID: UUID, by seconds: TimeInterval) {
+        mutate { db in
+            guard let index = db.sessions.firstIndex(where: { $0.id == sessionID }) else { return }
+            db.sessions[index].startedAt.addTimeInterval(-seconds)
+        }
+    }
+
     func addManualEvent(to sessionID: UUID, offset: TimeInterval, kind: DistressKind) {
         mutate { db in
             guard let index = db.sessions.firstIndex(where: { $0.id == sessionID }) else { return }
@@ -463,6 +471,9 @@ final class AppModel {
     }
 
     func unpair() {
+        if role == .owner, let link = db.preferences.link {
+            Task { await cloud.deleteLink(link) }
+        }
         nearby.stop()
         camera.disarm()
         updatePreferences { $0.link = nil }
