@@ -20,15 +20,17 @@ final class LiveActivityController {
     func update(status: MissionActivityAttributes.ContentState.Status, eventCount: Int, lastEventLabel: String?) {
         guard let activity else { return }
         let state = MissionActivityAttributes.ContentState(status: status, eventCount: eventCount, lastEventLabel: lastEventLabel, endedAt: nil)
-        Task { await activity.update(ActivityContent(state: state, staleDate: nil)) }
+        let box = UncheckedBox(value: activity)
+        Task { await box.value.update(ActivityContent(state: state, staleDate: nil)) }
     }
 
     func end(status: MissionActivityAttributes.ContentState.Status, eventCount: Int) {
         guard let ending = activity else { return }
         activity = nil
         let finalState = MissionActivityAttributes.ContentState(status: status, eventCount: eventCount, lastEventLabel: nil, endedAt: .now)
+        let box = UncheckedBox(value: ending)
         Task {
-            await ending.end(ActivityContent(state: finalState, staleDate: nil), dismissalPolicy: .after(.now.addingTimeInterval(60)))
+            await box.value.end(ActivityContent(state: finalState, staleDate: nil), dismissalPolicy: .after(.now.addingTimeInterval(60)))
         }
     }
 

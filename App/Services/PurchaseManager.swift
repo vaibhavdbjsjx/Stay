@@ -116,7 +116,9 @@ final class PurchaseManager {
                 renewal = transaction.expirationDate
             }
         }
-        if let status = try? await yearly?.subscription?.status.first ?? monthly?.subscription?.status.first,
+        let subscription = yearly?.subscription ?? monthly?.subscription
+        let statuses = (try? await subscription?.status) ?? []
+        if let status = statuses.first(where: { $0.state == .subscribed || $0.state == .inGracePeriod }) ?? statuses.first,
            case .verified(let info) = status.renewalInfo {
             renews = info.willAutoRenew
         }

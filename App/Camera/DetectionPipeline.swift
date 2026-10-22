@@ -337,7 +337,8 @@ extension DetectionPipeline: SNResultsObserving {
                 scores[label] = classification.confidence
             }
         }
-        analysisQueue.async { self.handle(scores: scores) }
+        let captured = scores
+        analysisQueue.async { self.handle(scores: captured) }
     }
 
     func request(_ request: SNRequest, didFailWithError error: Error) {}

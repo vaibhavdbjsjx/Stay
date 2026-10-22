@@ -1,0 +1,30 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "ALERT_DISTRESS_BODY" : {
+      "comment" : "CloudKit push body. %@ is the kind of sign, e.g. Barking.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ detected. Open Stay to check the live view."
+          }
+        }
+      }
+    },
+    "ALERT_DISTRESS_TITLE" : {
+      "comment" : "CloudKit push title. %@ is the dog's name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ may be stressed"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

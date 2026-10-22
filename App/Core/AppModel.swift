@@ -24,7 +24,7 @@ final class AppModel {
     let nearby = NearbyLink()
     let cloud = CloudRelay()
     let liveActivity = LiveActivityController()
-    private(set) lazy var camera = CameraController(model: self)
+    @ObservationIgnored private(set) lazy var camera = CameraController(model: self)
 
     var engine = MissionEngine()
     var stats = ProgressStats()
@@ -34,7 +34,6 @@ final class AppModel {
     private(set) var cloudSnapshot: UIImage?
     private(set) var cloudSnapshotAt: Date?
     private(set) var latestAlert: DistressEvent?
-    var pendingCelebration: [Milestone] = []
     var presentedPaywall = false
     var pendingPairing: PairingPayload?
 
@@ -233,7 +232,7 @@ final class AppModel {
     /// Whether the camera can be reached right now, and how.
     var cameraReachability: MonitoringSource? {
         if nearby.isConnected { return .nearby }
-        if let link = db.preferences.link, link.database != .nearbyOnly,
+        if purchases.isPro, let link = db.preferences.link, link.database != .nearbyOnly,
            let status = cameraStatus, status.state != .stopped, Date.now.timeIntervalSince(status.sentAt) < 90 {
             return .cloud
         }
@@ -264,8 +263,12 @@ final class AppModel {
 
     func endSession(_ id: UUID, reason: SessionEndReason) {
         guard let session = session(id), !session.isFinished else { return }
+        // Keep the last camera picture: it powers the Day 1 vs Day N share card and video.
+        let lastFrame = session.monitoring == .selfObserved ? nil : (nearby.latestFrame ?? cloudSnapshot)
+        let frameName = lastFrame.flatMap { store.saveImage($0, maxSide: 900) }
         mutate { db in
             guard let index = db.sessions.firstIndex(where: { $0.id == id }) else { return }
+            if let frameName { db.sessions[index].snapshotFilenames.append(frameName) }
             db.sessions[index].endedAt = .now
             if reason == .returnedEarly, db.sessions[index].actualSeconds >= db.sessions[index].plannedSeconds * SessionOutcome.completionRatio {
                 db.sessions[index].endReason = .completed
@@ -425,7 +428,7 @@ final class AppModel {
             return
         }
         nearby.start(linkID: link.linkID, role: role)
-        if role == .owner, link.database == .privateDB {
+        if role == .owner, link.database == .privateDB, purchases.isPro {
             let zoneID = CKRecordZone.ID(zoneName: link.zoneName, ownerName: CKCurrentUserDefaultName)
             Task { await cloud.installOwnerSubscription(zoneID: zoneID) }
             Task { await pollCloudOnce() }
@@ -553,7 +556,7 @@ final class AppModel {
     }
 
     func pollCloudOnce() async {
-        guard role == .owner, let link = db.preferences.link, link.database != .nearbyOnly else { return }
+        guard role == .owner, purchases.isPro, let link = db.preferences.link, link.database != .nearbyOnly else { return }
         let poll = await cloud.pollOwner(link: link, since: cloudToken)
         cloudToken = poll.token
         if let status = poll.status, status.sentAt > (cameraStatus?.sentAt ?? .distantPast) {
