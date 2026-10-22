@@ -85,7 +85,13 @@ struct MissionRunningView: View {
                         .padding(30)
                     }
                     .frame(width: 260, height: 260)
-                    .onChange(of: reached) { _, nowReached in if nowReached { Haptics.success() } }
+                    .onChange(of: reached) { _, nowReached in
+                        guard nowReached else { return }
+                        Haptics.success()
+                        if session.events.isEmpty {
+                            model.liveActivity.update(status: .timeToReturn, eventCount: 0, lastEventLabel: nil)
+                        }
+                    }
 
                     statusBanner(reached: reached)
                     LiveViewPanel(session: session)
