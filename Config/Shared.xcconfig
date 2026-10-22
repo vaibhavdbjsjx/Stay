@@ -1,0 +1,18 @@
+// Stay — the ONE place to set your identifiers before shipping.
+//
+// 1. Replace STAY_BUNDLE_PREFIX with your reverse-DNS prefix (e.g. com.acme).
+//    Everything else (bundle IDs, App Group, iCloud container) derives from it.
+// 2. Set STAY_TEAM_ID to your 10-character Apple Developer Team ID.
+//
+// Derived identifiers:
+//   App bundle ID       $(STAY_BUNDLE_PREFIX).stay
+//   Widget extension    $(STAY_BUNDLE_PREFIX).stay.widgets
+//   App Group           group.$(STAY_BUNDLE_PREFIX).stay
+//   iCloud container    iCloud.$(STAY_BUNDLE_PREFIX).stay
+
+STAY_BUNDLE_PREFIX = com.yourcompany
+STAY_TEAM_ID =
+
+STAY_BUNDLE_ID = $(STAY_BUNDLE_PREFIX).stay
+STAY_APP_GROUP = group.$(STAY_BUNDLE_PREFIX).stay
+STAY_ICLOUD_CONTAINER = iCloud.$(STAY_BUNDLE_PREFIX).stay

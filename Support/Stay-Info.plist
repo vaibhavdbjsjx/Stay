@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>StayAppGroup</key>
+	<string>$(STAY_APP_GROUP)</string>
+	<key>StayICloudContainer</key>
+	<string>$(STAY_ICLOUD_CONTAINER)</string>
+	<key>CKSharingSupported</key>
+	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>In Camera mode, Stay uses the camera to watch your dog while you are out and to scan the pairing code. Video is analysed on this device and is never recorded continuously.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>In Camera mode, Stay listens for barking, howling and whining so it can alert you. Sound is analysed on this device and audio is not recorded.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Choose a photo of your dog for their profile and progress cards.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Save your dog's progress cards and videos to your photo library.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Stay connects your phone and your dog camera directly over Wi-Fi for a live view while you are nearby.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_stay-link._tcp</string>
+		<string>_stay-link._udp</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>stay</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
