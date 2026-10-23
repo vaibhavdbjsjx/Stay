@@ -22,7 +22,7 @@ Thank you for reviewing Stay: Dog Separation Coach.
 - The camera is only used while Camera mode is on screen; Stay never uses the camera in the background. All sound and video analysis happens on the device with Apple's SoundAnalysis and Vision frameworks.
 
 **In-app purchases**
-- Stay Pro: monthly ($9.99), yearly ($59.99 with a 7-day free trial) and lifetime ($129.99). The paywall opens from Settings › Try Stay Pro, or after the 3 free missions. It shows price, trial terms, auto-renewal text, Terms of Use and Privacy Policy links, and Restore purchases. Restore is also in Settings.
+- Stay Pro: monthly ($6.99) and yearly ($39.99 with a 1-week free trial), both auto-renewable in one subscription group. The paywall opens from Settings › Try Stay Pro, or after the 3 free missions. It shows price, trial terms, auto-renewal text, Terms of Use and Privacy Policy links, and Restore purchases. Restore is also in Settings.
 
 **Health wording**
 Stay is training support based on graduated-absence methods. It does not diagnose or treat any condition, and it recommends a vet for severe cases.

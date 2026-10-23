@@ -7,10 +7,9 @@ import StoreKit
 @Observable
 final class PurchaseManager {
     enum ProductID {
-        static let monthly = "com.stay.pro.monthly"
-        static let yearly = "com.stay.pro.yearly"
-        static let lifetime = "com.stay.pro.lifetime"
-        static let all = [yearly, monthly, lifetime]
+        static let monthly = "com.vaibhavsg.stay.pro.monthly"
+        static let yearly = "com.vaibhavsg.stay.pro.yearly"
+        static let all = [yearly, monthly]
     }
 
     enum PurchaseResult {
@@ -43,13 +42,11 @@ final class PurchaseManager {
 
     var monthly: Product? { products.first { $0.id == ProductID.monthly } }
     var yearly: Product? { products.first { $0.id == ProductID.yearly } }
-    var lifetime: Product? { products.first { $0.id == ProductID.lifetime } }
 
     var activePlanName: String? {
         switch activeProductID {
         case ProductID.monthly: String(localized: "Stay Pro Monthly")
         case ProductID.yearly: String(localized: "Stay Pro Yearly")
-        case ProductID.lifetime: String(localized: "Stay Pro Lifetime")
         default: nil
         }
     }
@@ -110,8 +107,7 @@ final class PurchaseManager {
                   transaction.revocationDate == nil else { continue }
             if let expiry = transaction.expirationDate, expiry < .now { continue }
             pro = true
-            // Prefer showing lifetime over a subscription if both exist.
-            if active != ProductID.lifetime { active = transaction.productID }
+            active = transaction.productID
             if transaction.productType == .autoRenewable {
                 renewal = transaction.expirationDate
             }

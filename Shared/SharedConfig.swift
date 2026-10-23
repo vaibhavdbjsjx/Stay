@@ -4,7 +4,7 @@ import Foundation
 /// Values come from Info.plist, which takes them from Config/Shared.xcconfig.
 enum SharedConfig {
     static var appGroupID: String {
-        Bundle.main.object(forInfoDictionaryKey: "StayAppGroup") as? String ?? "group.com.yourcompany.stay"
+        Bundle.main.object(forInfoDictionaryKey: "StayAppGroup") as? String ?? "group.com.vaibhavsg.stay"
     }
 
     /// The App Group container when available, otherwise Application Support

@@ -19,7 +19,7 @@ final class PurchaseTests: XCTestCase {
     func testProductsLoadInPaywallOrder() async {
         let manager = PurchaseManager()
         await manager.load()
-        XCTAssertEqual(manager.products.map(\.id), [PurchaseManager.ProductID.yearly, PurchaseManager.ProductID.monthly, PurchaseManager.ProductID.lifetime])
+        XCTAssertEqual(manager.products.map(\.id), [PurchaseManager.ProductID.yearly, PurchaseManager.ProductID.monthly])
         XCTAssertFalse(manager.isPro)
         if let yearly = manager.yearly {
             XCTAssertEqual(manager.trialText(for: yearly), "7-day free trial")
@@ -39,13 +39,13 @@ final class PurchaseTests: XCTestCase {
         XCTAssertEqual(manager.activeProductID, PurchaseManager.ProductID.yearly)
     }
 
-    func testLifetimeSurvivesRestore() async throws {
+    func testSubscriptionSurvivesRelaunch() async throws {
         let manager = PurchaseManager()
         await manager.load()
-        _ = try await manager.purchase(try XCTUnwrap(manager.lifetime))
+        _ = try await manager.purchase(try XCTUnwrap(manager.monthly))
         let fresh = PurchaseManager()
         await fresh.load()
         XCTAssertTrue(fresh.isPro)
-        XCTAssertEqual(fresh.activePlanName, "Stay Pro Lifetime")
+        XCTAssertEqual(fresh.activePlanName, "Stay Pro Monthly")
     }
 }

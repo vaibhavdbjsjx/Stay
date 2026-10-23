@@ -67,9 +67,7 @@ struct SettingsView: View {
                         }
                     }
                 }
-                if purchases.activeProductID != PurchaseManager.ProductID.lifetime {
-                    Button("Manage subscription") { showManageSubscriptions = true }
-                }
+                Button("Manage subscription") { showManageSubscriptions = true }
             } else {
                 Button {
                     model.presentedPaywall = true

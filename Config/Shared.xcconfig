@@ -6,12 +6,12 @@
 //
 // Derived identifiers:
 //   App bundle ID       $(STAY_BUNDLE_PREFIX).stay
-//   Widget extension    $(STAY_BUNDLE_PREFIX).stay.widgets
+//   Widget extension    $(STAY_BUNDLE_PREFIX).stay.widget
 //   App Group           group.$(STAY_BUNDLE_PREFIX).stay
 //   iCloud container    iCloud.$(STAY_BUNDLE_PREFIX).stay
 
-STAY_BUNDLE_PREFIX = com.yourcompany
-STAY_TEAM_ID =
+STAY_BUNDLE_PREFIX = com.vaibhavsg
+STAY_TEAM_ID = LNL8GARN23
 
 STAY_BUNDLE_ID = $(STAY_BUNDLE_PREFIX).stay
 STAY_APP_GROUP = group.$(STAY_BUNDLE_PREFIX).stay

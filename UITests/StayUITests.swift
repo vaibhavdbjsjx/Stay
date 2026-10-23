@@ -142,7 +142,9 @@ final class StayUITests: XCTestCase {
     }
 
     private func tapTab(_ name: String) {
-        tap(app.tabBars.buttons[name].firstMatch)
+        // iPhone uses a bottom tab bar; iPad shows tabs at the top or in a sidebar.
+        let inBar = app.tabBars.buttons[name].firstMatch
+        tap(inBar.waitForExistence(timeout: 2) ? inBar : app.buttons[name].firstMatch)
         sleep(1)
     }
 

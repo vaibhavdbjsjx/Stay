@@ -112,6 +112,7 @@ section { padding: 96px 0; }
 
 /* Pricing */
 .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.plans.two { grid-template-columns: repeat(2, minmax(0, 360px)); justify-content: center; }
 .plan { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; display: flex; flex-direction: column; gap: 6px; }
 .plan.best { border: 2px solid var(--apricot); position: relative; }
 .plan .badge { position: absolute; top: -13px; left: 24px; background: var(--apricot); color: #fff; font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 999px; }

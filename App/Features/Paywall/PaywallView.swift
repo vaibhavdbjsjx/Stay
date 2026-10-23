@@ -117,8 +117,6 @@ struct PaywallView: View {
                 return percent > 0 ? String(localized: "Save \(percent)%") : nil
             }
             return String(localized: "Best value")
-        case PurchaseManager.ProductID.lifetime:
-            return String(localized: "Pay once")
         default:
             return nil
         }
@@ -157,7 +155,7 @@ struct PaywallView: View {
 
     private var ctaTitle: String {
         guard let selected else { return String(localized: "Continue") }
-        if purchases.trialText(for: selected) != nil { return String(localized: "Start 7-day free trial") }
+        if purchases.trialText(for: selected) != nil { return String(localized: "Start free trial") }
         return selected.type == .nonConsumable ? String(localized: "Buy for \(selected.displayPrice)") : String(localized: "Subscribe for \(selected.displayPrice)")
     }
 

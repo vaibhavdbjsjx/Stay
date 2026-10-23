@@ -22,12 +22,12 @@ App icon source: `swift scripts/make_icon.swift App/Resources/Assets.xcassets/Ap
 
 | Setting | Example | Derives |
 |---|---|---|
-| `STAY_BUNDLE_PREFIX` | `com.acme` | app `com.acme.stay`, widget `com.acme.stay.widgets`, App Group `group.com.acme.stay`, iCloud container `iCloud.com.acme.stay` |
-| `STAY_TEAM_ID` | `ABCDE12345` | signing team for all targets |
+| `STAY_BUNDLE_PREFIX` | `com.vaibhavsg` (set) | app `com.vaibhavsg.stay`, widget `com.vaibhavsg.stay.widget`, App Group `group.com.vaibhavsg.stay`, iCloud container `iCloud.com.vaibhavsg.stay` |
+| `STAY_TEAM_ID` | `LNL8GARN23` (set) | signing team for all targets |
 
-`App/Core/AppConfig.swift` — `supportEmail` and `websiteURL` (privacy/terms/support links). Also replace `support@example.com` in `website/*.html`.
+`App/Core/AppConfig.swift` — `supportEmail` and `websiteURL` (privacy/terms/support links). Also replace `support.stay11@gmail.com` in `website/*.html`.
 
-> The StoreKit product IDs (`com.stay.pro.monthly`, `com.stay.pro.yearly`, `com.stay.pro.lifetime`) are fixed strings in `PurchaseManager.ProductID` and `Stay.storekit`. Product IDs must be unique across the App Store; if `com.stay.*` is taken, change them in both places (e.g. `com.acme.stay.pro.monthly`).
+> StoreKit product IDs live in `PurchaseManager.ProductID` and `Stay.storekit`: `com.vaibhavsg.stay.pro.monthly` and `com.vaibhavsg.stay.pro.yearly`.
 
 ---
 
@@ -81,9 +81,10 @@ Pro: unlimited missions, iCloud alerts + near-live view away from home, weekly i
 - **Google (Gmail) sign-in:** in [Google Cloud Console](https://console.cloud.google.com/) › APIs & Services › OAuth consent screen, configure an External app (name "Stay", your support email, privacy URL). Then Credentials › Create credentials › OAuth client ID › **iOS**, bundle ID `<prefix>.stay`. Copy the client ID into `STAY_GOOGLE_CLIENT_ID` and the "iOS URL scheme" (reversed client ID) into `STAY_GOOGLE_REVERSED_CLIENT_ID` in `Config/Shared.xcconfig`. Until you do, the Google button is hidden automatically, so no broken button ever ships.
 - Accounts are optional (guideline 5.1.1): users can try everything without signing in. **Delete account** is in Settings › Account; Google tokens are revoked on deletion. Sign in with Apple and Google appear with equal prominence (guideline 4.8).
 
-### Website (GitHub Pages)
-- Repo › Settings › Pages › Source: **GitHub Actions**. The included workflow `.github/workflows/pages.yml` publishes `website/` to `https://vaibhavdbjsjx.github.io/Stay/`, which is what the app's Privacy/Terms/Support links use (`AppConfig.websiteURL`).
-- Replace `support@example.com` in `App/Core/AppConfig.swift` and `website/*.html`. The in-app "Contact support" row stays hidden until a real address is set.
+### Website (Netlify)
+- Netlify site deployed from this repo: base directory empty, **publish directory `website`**, no build command. `website/netlify.toml` adds security headers.
+- Live URLs used by the app (`AppConfig`): https://stay-dog-coach.netlify.app/ · /privacy.html · /terms.html · /support.html
+- Support email: support.stay11@gmail.com (`AppConfig.supportEmail` and the website).
 
 ### Identifiers & capabilities (developer.apple.com › Identifiers)
 - [ ] App ID `<prefix>.stay` with: **iCloud** (CloudKit, container `iCloud.<prefix>.stay`), **Push Notifications**, **App Groups** (`group.<prefix>.stay`), **Sign in with Apple**.
@@ -98,10 +99,9 @@ Pro: unlimited missions, iCloud alerts + near-live view away from home, weekly i
 
 ### Products (App Store Connect › Monetization)
 - [ ] Subscription group **Stay Pro**:
-  - `com.stay.pro.yearly` — 1 year, $59.99, introductory offer: free trial 1 week (new subscribers). Level 1.
-  - `com.stay.pro.monthly` — 1 month, $9.99. Level 2.
-- [ ] Non-consumable `com.stay.pro.lifetime` — $129.99.
-- [ ] Turn on Family Sharing for all three (matches the .storekit file), add display names/descriptions and a review screenshot of the paywall.
+  - `com.vaibhavsg.stay.pro.yearly` — 1 year, $39.99, introductory offer: free trial 1 week (new subscribers). Level 1.
+  - `com.vaibhavsg.stay.pro.monthly` — 1 month, $6.99. Level 2.
+- [ ] Turn on Family Sharing for both (matches the .storekit file), add display names/descriptions and a review screenshot of the paywall.
 - [ ] Paste the Terms of Use (or the standard EULA link) and Privacy Policy URL in App Information.
 
 ### App information
@@ -135,13 +135,13 @@ Pro: unlimited missions, iCloud alerts + near-live view away from home, weekly i
   >
   > No account. No ads. No tracking.
   >
-  > Free: baseline test, 3 monitored missions and live view on Wi-Fi. Stay Pro unlocks unlimited missions, alerts away from home, weekly insights, reports and multiple dogs. Monthly $9.99, yearly $59.99 with a 7-day free trial, or lifetime $129.99. Subscriptions renew automatically unless cancelled at least 24 hours before the end of the period.
+  > Free: baseline test, 3 monitored missions and live view on Wi-Fi. Stay Pro unlocks unlimited missions, alerts away from home, weekly insights, reports and multiple dogs. Monthly $6.99 or yearly $39.99 with a 1-week free trial. Subscriptions renew automatically unless cancelled at least 24 hours before the end of the period.
   >
   > Stay is training support, not veterinary care. If your dog is very distressed or has hurt themselves, please talk to your vet.
   >
   > Terms: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 
-- **Support URL:** `<your site>/support.html` · **Marketing URL:** `<your site>/` · **Privacy Policy URL:** `<your site>/privacy.html`
+- **Support URL:** https://stay-dog-coach.netlify.app/support.html · **Marketing URL:** https://stay-dog-coach.netlify.app/ · **Privacy Policy URL:** https://stay-dog-coach.netlify.app/privacy.html
 
 ### App Privacy (nutrition label)
 - **Data collection:** “**No, we do not collect data from this app.**” Rationale: all data stays on device or in the user's own iCloud private/shared database, which Apple does not treat as developer collection; there are no analytics, ads or third-party SDKs; the on-device model sends nothing off device.
@@ -162,7 +162,7 @@ Pro: unlimited missions, iCloud alerts + near-live view away from home, weekly i
 8. **Coach** — weekly insight. Caption: *Personal coaching, private on your iPhone.*
 
 ### Final checks
-- [ ] Replace `support@example.com` (AppConfig + website) and deploy `website/` (GitHub Pages: Settings › Pages › deploy from branch, folder `/website`, or copy it to a `gh-pages` branch). Update `AppConfig.websiteURL`.
+- [ ] Replace `support.stay11@gmail.com` (AppConfig + website) and deploy `website/` (GitHub Pages: Settings › Pages › deploy from branch, folder `/website`, or copy it to a `gh-pages` branch). Update `AppConfig.websiteURL`.
 - [ ] Archive with Release configuration, upload, and test with TestFlight on two devices (Wi-Fi and cellular away-from-home alert).
 - [ ] Verify the yearly trial shows in the sandbox paywall and that Restore works.
 
