@@ -71,6 +71,7 @@ final class StayUITests: XCTestCase {
         completeOwnerOnboarding(dogName: "Pip")
         tapTab("Settings")
         let add = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Add a dog'")).firstMatch
+        for _ in 0..<4 where !add.exists { app.swipeUp() }
         tap(add)
         // Free tier allows one dog, so the paywall opens.
         XCTAssertTrue(app.buttons["Restore purchases"].waitForExistence(timeout: 8))

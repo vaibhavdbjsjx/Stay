@@ -104,7 +104,7 @@ private struct WelcomeStep: View {
                 .padding(.horizontal, 32)
                 .opacity(appeared ? 1 : 0)
                 Button("Get started", action: next)
-                    .buttonStyle(.stayPrimary(StayPalette.apricot))
+                    .buttonStyle(.stayPrimary(Color(hex: 0xE07F52), foreground: .white))
                     .padding(.horizontal, 24)
                 Text("Training support, not a medical treatment. Talk to your vet about severe anxiety.")
                     .font(StayFont.caption)

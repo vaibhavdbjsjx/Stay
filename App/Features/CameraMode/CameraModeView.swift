@@ -262,10 +262,10 @@ private struct MonitoringScreen: View {
                 HStack(spacing: 12) {
                     if camera.isRunning {
                         Button("End session") { confirmStop = true }
-                            .buttonStyle(.stayPrimary(StayPalette.alert))
+                            .buttonStyle(.stayPrimary(StayPalette.alert, foreground: .white))
                     }
                     Button("Disarm") { camera.disarm() }
-                        .buttonStyle(.stayPrimary(.white.opacity(0.15)))
+                        .buttonStyle(.stayPrimary(.white.opacity(0.15), foreground: .white))
                 }
                 Text("Tap anywhere to wake the screen").font(StayFont.caption).foregroundStyle(.white.opacity(0.4))
             }

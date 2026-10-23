@@ -8,6 +8,7 @@ struct PaywallView: View {
     @State private var selectedID = PurchaseManager.ProductID.yearly
     @State private var purchasing = false
     @State private var message: String?
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     private var selected: Product? { purchases.products.first { $0.id == selectedID } }
 
@@ -15,10 +16,13 @@ struct PaywallView: View {
         ScrollView {
             VStack(spacing: 24) {
                 hero
-                features.reveal(1)
-                plans.reveal(2)
+                plans.reveal(1)
+                features.reveal(2)
                 if let message {
                     Text(message).font(StayFont.callout).foregroundStyle(StayPalette.alert).multilineTextAlignment(.center)
+                }
+                if typeSize.isAccessibilitySize {
+                    ctaDetailText
                 }
                 legal
             }
@@ -134,15 +138,21 @@ struct PaywallView: View {
             }
             .buttonStyle(.stayPrimary(StayPalette.apricot))
             .disabled(selected == nil || purchasing)
-            Text(ctaDetail)
-                .font(StayFont.caption)
-                .foregroundStyle(StayPalette.inkSecondary)
-                .multilineTextAlignment(.center)
+            if !typeSize.isAccessibilitySize {
+                ctaDetailText
+            }
         }
         .padding(.horizontal, 20)
         .padding(.top, 12)
         .padding(.bottom, 8)
         .background(StayPalette.canvas.opacity(0.97))
+    }
+
+    private var ctaDetailText: some View {
+        Text(ctaDetail)
+            .font(StayFont.caption)
+            .foregroundStyle(StayPalette.inkSecondary)
+            .multilineTextAlignment(.center)
     }
 
     private var ctaTitle: String {
@@ -225,6 +235,7 @@ private struct PaywallFeature: View {
 
 private struct PlanOption: View {
     @Environment(PurchaseManager.self) private var purchases
+    @Environment(\.dynamicTypeSize) private var typeSize
     var product: Product
     var selected: Bool
     var badge: String?
@@ -232,27 +243,30 @@ private struct PlanOption: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 14) {
-                Image(systemName: selected ? "checkmark.circle.fill" : "circle")
-                    .font(.title2)
-                    .foregroundStyle(selected ? StayPalette.apricot : StayPalette.inkTertiary)
-                VStack(alignment: .leading, spacing: 3) {
-                    HStack(spacing: 8) {
+            let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10)) : AnyLayout(HStackLayout(spacing: 14))
+            layout {
+                HStack(spacing: 12) {
+                    Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+                        .font(.title2)
+                        .foregroundStyle(selected ? StayPalette.apricot : StayPalette.inkTertiary)
+                    VStack(alignment: .leading, spacing: 3) {
                         Text(product.displayName).font(StayFont.headline).foregroundStyle(StayPalette.ink)
+                            .fixedSize(horizontal: false, vertical: true)
                         if let badge { Pill(text: badge, tint: .white, fill: StayPalette.apricot) }
-                    }
-                    if let trial = purchases.trialText(for: product) {
-                        Text(trial).font(StayFont.captionEmphasis).foregroundStyle(StayPalette.calm)
-                    } else if let perMonth = purchases.monthlyEquivalent(for: product) {
-                        Text("\(perMonth) per month").font(StayFont.caption).foregroundStyle(StayPalette.inkSecondary)
+                        if let trial = purchases.trialText(for: product) {
+                            Text(trial).font(StayFont.captionEmphasis).foregroundStyle(StayPalette.calm)
+                        } else if let perMonth = purchases.monthlyEquivalent(for: product) {
+                            Text("\(perMonth) per month").font(StayFont.caption).foregroundStyle(StayPalette.inkSecondary)
+                        }
                     }
                 }
-                Spacer()
-                VStack(alignment: .trailing, spacing: 2) {
+                if !typeSize.isAccessibilitySize { Spacer(minLength: 8) }
+                VStack(alignment: typeSize.isAccessibilitySize ? .leading : .trailing, spacing: 2) {
                     Text(product.displayPrice).font(StayFont.headline).foregroundStyle(StayPalette.ink)
                     Text(purchases.periodText(for: product)).font(StayFont.caption).foregroundStyle(StayPalette.inkSecondary)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(16)
             .background(StayPalette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(selected ? StayPalette.apricot : StayPalette.hairline, lineWidth: selected ? 2 : 1))

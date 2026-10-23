@@ -112,23 +112,23 @@ struct TrendChart: View {
     private struct Point: Identifiable {
         var id: UUID
         var date: Date
-        var minutes: Double
+        var seconds: Double
         var calm: Bool
     }
 
     var body: some View {
         let points = sessions.sorted { $0.startedAt < $1.startedAt }.suffix(40).map {
-            Point(id: $0.id, date: $0.startedAt, minutes: ($0.isCalm ? $0.actualSeconds : ($0.firstConfirmedDistress ?? $0.actualSeconds)) / 60, calm: $0.isCalm)
+            Point(id: $0.id, date: $0.startedAt, seconds: ($0.isCalm ? $0.actualSeconds : ($0.firstConfirmedDistress ?? $0.actualSeconds)), calm: $0.isCalm)
         }
         VStack(alignment: .leading, spacing: 12) {
             Text("Time alone").font(StayFont.headline)
             Text("Calm sessions in green, sessions with stress in orange").font(StayFont.caption).foregroundStyle(StayPalette.inkSecondary)
             Chart {
                 ForEach(points) { point in
-                    LineMark(x: .value("Date", point.date), y: .value("Minutes", grown ? point.minutes : 0))
+                    LineMark(x: .value("Date", point.date), y: .value("Seconds", grown ? point.seconds : 0))
                         .foregroundStyle(StayPalette.sage.opacity(0.4))
                         .interpolationMethod(.monotone)
-                    PointMark(x: .value("Date", point.date), y: .value("Minutes", grown ? point.minutes : 0))
+                    PointMark(x: .value("Date", point.date), y: .value("Seconds", grown ? point.seconds : 0))
                         .foregroundStyle(point.calm ? StayPalette.calm : StayPalette.apricot)
                         .symbolSize(60)
                 }
@@ -137,7 +137,7 @@ struct TrendChart: View {
                         .foregroundStyle(StayPalette.inkTertiary)
                         .annotation(position: .top, overflowResolution: .init(x: .fit, y: .disabled)) {
                             VStack(spacing: 2) {
-                                Text(DurationText.short(nearest.minutes * 60)).font(StayFont.captionEmphasis)
+                                Text(DurationText.short(nearest.seconds)).font(StayFont.captionEmphasis)
                                 Text(nearest.date.formatted(.dateTime.month().day())).font(.caption2)
                             }
                             .padding(6)
@@ -146,10 +146,11 @@ struct TrendChart: View {
                 }
             }
             .chartXSelection(value: $selected)
+            .chartYScale(domain: 0...max(10, (points.map(\.seconds).max() ?? 10) * 1.15))
             .chartYAxis {
                 AxisMarks { value in
                     AxisGridLine().foregroundStyle(StayPalette.hairline)
-                    AxisValueLabel { if let m = value.as(Double.self) { Text("\(Int(m)) min") } }
+                    AxisValueLabel { if let seconds = value.as(Double.self) { Text(DurationText.short(seconds)) } }
                 }
             }
             .frame(height: 200)

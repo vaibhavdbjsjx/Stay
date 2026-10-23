@@ -42,12 +42,15 @@ extension View {
 
 struct PrimaryButtonStyle: ButtonStyle {
     var tint: Color = StayPalette.sage
+    /// Defaults to white in light mode and near-black in dark mode, where tints are lighter.
+    var foreground: Color?
     @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.colorScheme) private var colorScheme
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(StayFont.headline)
-            .foregroundStyle(Color.white)
+            .foregroundStyle(foreground ?? (colorScheme == .dark ? Color(hex: 0x14120F) : Color.white))
             .padding(.vertical, 17)
             .padding(.horizontal, 24)
             .frame(maxWidth: .infinity)
@@ -77,7 +80,7 @@ struct SecondaryButtonStyle: ButtonStyle {
 
 extension ButtonStyle where Self == PrimaryButtonStyle {
     static var stayPrimary: PrimaryButtonStyle { PrimaryButtonStyle() }
-    static func stayPrimary(_ tint: Color) -> PrimaryButtonStyle { PrimaryButtonStyle(tint: tint) }
+    static func stayPrimary(_ tint: Color, foreground: Color? = nil) -> PrimaryButtonStyle { PrimaryButtonStyle(tint: tint, foreground: foreground) }
 }
 
 extension ButtonStyle where Self == SecondaryButtonStyle {
