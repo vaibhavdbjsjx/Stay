@@ -12,6 +12,8 @@ struct TodayView: View {
             ScrollView {
                 if let dog = model.selectedDog {
                     content(dog)
+                        .animation(.spring(response: 0.45, dampingFraction: 0.9), value: model.activeSession?.id)
+                        .animation(.spring(response: 0.45, dampingFraction: 0.9), value: model.sessionAwaitingReview(for: dog.id)?.id)
                         .padding(.horizontal, 20)
                         .padding(.bottom, 32)
                 } else {
@@ -41,19 +43,21 @@ struct TodayView: View {
     private func content(_ dog: Dog) -> some View {
         let mission = model.todayMission(for: dog)
         VStack(alignment: .leading, spacing: 20) {
-            header(dog)
+            header(dog).reveal(0)
             if let active = model.activeSession {
                 ActiveSessionBanner(session: active) { flowSessionID = active.id }
+                    .transition(.move(edge: .top).combined(with: .opacity))
             } else if let pending = model.sessionAwaitingReview(for: dog.id) {
                 ReviewPromptCard(session: pending, dogName: dog.name) { flowSessionID = pending.id }
+                    .transition(.move(edge: .top).combined(with: .opacity))
             }
-            MissionHeroCard(dog: dog, mission: mission) { startTapped(dog: dog, mission: mission) }
+            MissionHeroCard(dog: dog, mission: mission) { startTapped(dog: dog, mission: mission) }.reveal(1)
             if case .absence = mission.kind, let drill = mission.cueDrill {
-                CueDrillCard(dog: dog, drill: drill)
+                CueDrillCard(dog: dog, drill: drill).reveal(2)
             }
-            CoachTipCard(dog: dog)
-            StatsStrip(dog: dog)
-            CameraStatusCard { showPairing = true }
+            CoachTipCard(dog: dog).reveal(3)
+            StatsStrip(dog: dog).reveal(4)
+            CameraStatusCard { showPairing = true }.reveal(5)
         }
     }
 
@@ -205,7 +209,7 @@ private struct ActiveSessionBanner: View {
             }
             .stayCard(padding: 16, fill: StayPalette.apricotSoft)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableCardStyle())
     }
 }
 
@@ -228,7 +232,7 @@ private struct ReviewPromptCard: View {
             }
             .stayCard(padding: 16)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableCardStyle())
     }
 }
 
@@ -345,7 +349,7 @@ private struct CameraStatusCard: View {
             }
             .stayCard(padding: 14)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableCardStyle())
     }
 
     private var tint: Color {

@@ -50,18 +50,19 @@ struct ProgressScreen: View {
                 MetricTile(value: "\(snapshot.calmSessions)", label: String(localized: "Calm sessions"), symbol: "checkmark.seal.fill", tint: StayPalette.calm)
                 MetricTile(value: dog.plan.phase == .training ? DurationText.short(dog.plan.targetSeconds) : "—", label: String(localized: "Next mission"), symbol: "target", tint: StayPalette.amber)
             }
+            .reveal(0)
 
             if reviewed.isEmpty {
                 EmptyStateView(symbol: "chart.line.uptrend.xyaxis", title: String(localized: "Your chart starts here"), message: String(localized: "Complete and review the baseline to see \(dog.name)'s progress."))
                     .stayCard()
             } else {
-                TrendChart(sessions: reviewed).stayCard()
+                TrendChart(sessions: reviewed).stayCard().reveal(1)
                 if let goal = model.stats.nextDurationGoal(after: snapshot.longestCalm) {
                     NextGoalCard(longest: snapshot.longestCalm, goal: goal)
                 }
             }
 
-            MilestoneShelf(reached: model.milestones(for: dog.id))
+            MilestoneShelf(reached: model.milestones(for: dog.id)).reveal(2)
 
             VStack(alignment: .leading, spacing: 12) {
                 SectionHeader(title: String(localized: "Sessions"), trailing: reviewed.isEmpty ? nil : String(localized: "\(reviewed.count) total"))
@@ -105,6 +106,8 @@ struct ProgressScreen: View {
 struct TrendChart: View {
     var sessions: [AbsenceSession]
     @State private var selected: Date?
+    @State private var grown = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private struct Point: Identifiable {
         var id: UUID
@@ -122,10 +125,10 @@ struct TrendChart: View {
             Text("Calm sessions in green, sessions with stress in orange").font(StayFont.caption).foregroundStyle(StayPalette.inkSecondary)
             Chart {
                 ForEach(points) { point in
-                    LineMark(x: .value("Date", point.date), y: .value("Minutes", point.minutes))
+                    LineMark(x: .value("Date", point.date), y: .value("Minutes", grown ? point.minutes : 0))
                         .foregroundStyle(StayPalette.sage.opacity(0.4))
                         .interpolationMethod(.monotone)
-                    PointMark(x: .value("Date", point.date), y: .value("Minutes", point.minutes))
+                    PointMark(x: .value("Date", point.date), y: .value("Minutes", grown ? point.minutes : 0))
                         .foregroundStyle(point.calm ? StayPalette.calm : StayPalette.apricot)
                         .symbolSize(60)
                 }
@@ -151,6 +154,11 @@ struct TrendChart: View {
             }
             .frame(height: 200)
             .accessibilityLabel(Text("Chart of time alone across \(points.count) sessions"))
+            .onAppear {
+                if reduceMotion { grown = true } else {
+                    withAnimation(.spring(response: 0.9, dampingFraction: 0.85).delay(0.15)) { grown = true }
+                }
+            }
         }
     }
 }

@@ -15,8 +15,8 @@ struct PaywallView: View {
         ScrollView {
             VStack(spacing: 24) {
                 hero
-                features
-                plans
+                features.reveal(1)
+                plans.reveal(2)
                 if let message {
                     Text(message).font(StayFont.callout).foregroundStyle(StayPalette.alert).multilineTextAlignment(.center)
                 }
@@ -97,7 +97,7 @@ struct PaywallView: View {
                 ForEach(purchases.products) { product in
                     PlanOption(product: product, selected: product.id == selectedID, badge: badge(for: product)) {
                         Haptics.select()
-                        selectedID = product.id
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) { selectedID = product.id }
                     }
                 }
             }
@@ -256,6 +256,7 @@ private struct PlanOption: View {
             .padding(16)
             .background(StayPalette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(selected ? StayPalette.apricot : StayPalette.hairline, lineWidth: selected ? 2 : 1))
+            .scaleEffect(selected ? 1 : 0.985)
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(selected ? .isSelected : [])

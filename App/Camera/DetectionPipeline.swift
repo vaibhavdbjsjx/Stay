@@ -129,6 +129,7 @@ final class DetectionPipeline: NSObject, @unchecked Sendable {
     // MARK: Video
 
     private func startVideo() async -> Bool {
+        guard AVCaptureDevice.authorizationStatus(for: .video) == .authorized else { return false }
         guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
                 ?? AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) else { return false }
         return await withCheckedContinuation { continuation in
@@ -173,6 +174,8 @@ final class DetectionPipeline: NSObject, @unchecked Sendable {
     private enum AudioResult { case ok, noMicrophone, noClassifier }
 
     private func startAudio() -> AudioResult {
+        // Never touch the audio engine without permission: it can stall when access is denied.
+        guard AVAudioApplication.shared.recordPermission == .granted else { return .noMicrophone }
         let audioSession = AVAudioSession.sharedInstance()
         do {
             try audioSession.setCategory(.record, mode: .measurement)

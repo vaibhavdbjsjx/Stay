@@ -110,13 +110,6 @@ struct MissionRunningView: View {
                         }
                         .stayCard()
                     }
-                    Button {
-                        Haptics.warning()
-                        model.addManualEvent(to: session.id, offset: elapsed, kind: .other)
-                    } label: {
-                        Label("I noticed a sign of stress", systemImage: "hand.raised.fill")
-                    }
-                    .buttonStyle(.staySecondary)
                 }
                 .padding(20)
             }
@@ -128,11 +121,33 @@ struct MissionRunningView: View {
                         Label(reached || isBaseline ? String(localized: "I'm back") : String(localized: "I'm back early"), systemImage: "house.fill")
                     }
                     .buttonStyle(.stayPrimary(reached ? StayPalette.calm : StayPalette.sage))
-                    Button(role: .destructive) {
-                        confirmEnd = true
-                    } label: {
-                        Text("End because of stress").font(StayFont.callout.weight(.semibold))
+                    .accessibilityIdentifier("run.back")
+                    HStack(spacing: 10) {
+                        Button {
+                            Haptics.warning()
+                            model.addManualEvent(to: session.id, offset: elapsed, kind: .other)
+                        } label: {
+                            Label("Mark a sign", systemImage: "hand.raised.fill")
+                                .font(StayFont.callout.weight(.semibold))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(StayPalette.sageSoft, in: Capsule())
+                        }
+                        .accessibilityLabel(Text("I noticed a sign of stress"))
+                        .accessibilityIdentifier("run.noticed")
+                        Button {
+                            confirmEnd = true
+                        } label: {
+                            Text("End: stress")
+                                .font(StayFont.callout.weight(.semibold))
+                                .foregroundStyle(StayPalette.alert)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(StayPalette.alert.opacity(0.1), in: Capsule())
+                        }
+                        .accessibilityLabel(Text("End because of stress"))
                     }
+                    .buttonStyle(.plain)
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 10)
@@ -219,7 +234,7 @@ struct LiveViewPanel: View {
                         Image(systemName: session.monitoring == .selfObserved ? "eye" : "video.slash")
                             .font(.title)
                         Text(session.monitoring == .selfObserved
-                             ? String(localized: "No camera for this mission. Use “I noticed a sign of stress” if you hear or see anything.")
+                             ? String(localized: "No camera for this mission. Tap “Mark a sign” if you hear or see anything.")
                              : String(localized: "Waiting for the first picture from the dog camera…"))
                             .font(StayFont.caption)
                             .multilineTextAlignment(.center)
@@ -268,7 +283,7 @@ struct SessionReviewView: View {
                     }
                     HStack(spacing: 12) {
                         MetricTile(value: DurationText.short(session.actualSeconds), label: String(localized: "Alone"), symbol: "clock.fill")
-                        MetricTile(value: session.kind == .baseline ? "—" : DurationText.short(session.plannedSeconds), label: String(localized: "Planned"), symbol: "target", tint: StayPalette.apricot)
+                        MetricTile(value: session.kind == .baseline ? String(localized: "Open") : DurationText.short(session.plannedSeconds), label: session.kind == .baseline ? String(localized: "Baseline") : String(localized: "Planned"), symbol: "target", tint: StayPalette.apricot)
                     }
                     if !session.levelTimeline.isEmpty {
                         SessionTimelineChart(session: session).stayCard()
@@ -317,6 +332,7 @@ struct SessionReviewView: View {
                     Text(session.pendingEvents.isEmpty ? String(localized: "Save review") : String(localized: "Save — dismiss \(session.pendingEvents.count) unchecked"))
                 }
                 .buttonStyle(.stayPrimary)
+                .accessibilityIdentifier("review.save")
                 .padding(.horizontal, 20)
                 .padding(.bottom, 8)
             }
@@ -531,7 +547,7 @@ struct MissionResultView: View {
                     }
                     .buttonStyle(.stayPrimary(StayPalette.apricot))
                 }
-                Button("Done", action: done).buttonStyle(.staySecondary)
+                Button("Done", action: done).buttonStyle(.staySecondary).accessibilityIdentifier("result.done")
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 8)

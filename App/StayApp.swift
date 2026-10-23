@@ -5,7 +5,13 @@ import UserNotifications
 @main
 struct StayApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    @State private var model = AppModel()
+    @State private var model: AppModel = {
+        // UI tests start from a clean slate.
+        if ProcessInfo.processInfo.arguments.contains("-uiTestReset") {
+            DataStore().deleteEverything()
+        }
+        return AppModel()
+    }()
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {

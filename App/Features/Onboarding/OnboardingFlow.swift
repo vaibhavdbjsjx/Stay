@@ -115,6 +115,7 @@ private struct WelcomeStep: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
+        .statusBarHidden()
         .onAppear {
             withAnimation(.spring(response: 0.9, dampingFraction: 0.8).delay(0.1)) { appeared = true }
         }

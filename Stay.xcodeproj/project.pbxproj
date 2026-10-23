@@ -27,6 +27,13 @@
 			remoteGlobalIDString = 5A7A00000000000000000401;
 			remoteInfo = Stay;
 		};
+		5A7A00000000000000000303 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5A7A00000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5A7A00000000000000000401;
+			remoteInfo = Stay;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +54,7 @@
 		5A7A00000000000000000201 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A7A00000000000000000202 /* StayWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = StayWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A7A00000000000000000203 /* StayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A7A0000000000000000020B /* StayUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StayUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A7A00000000000000000204 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
 		5A7A00000000000000000205 /* Stay.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Stay.storekit; sourceTree = "<group>"; };
 		5A7A00000000000000000206 /* Stay-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Stay-Info.plist"; sourceTree = "<group>"; };
@@ -61,6 +69,7 @@
 		5A7A00000000000000000602 /* Shared */ = {isa = PBXFileSystemSynchronizedRootGroup; path = Shared; sourceTree = "<group>"; };
 		5A7A00000000000000000603 /* Widgets */ = {isa = PBXFileSystemSynchronizedRootGroup; path = Widgets; sourceTree = "<group>"; };
 		5A7A00000000000000000604 /* Tests */ = {isa = PBXFileSystemSynchronizedRootGroup; path = Tests; sourceTree = "<group>"; };
+		5A7A00000000000000000605 /* UITests */ = {isa = PBXFileSystemSynchronizedRootGroup; path = UITests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +96,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5A7A00000000000000000832 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -98,6 +114,7 @@
 				5A7A00000000000000000602 /* Shared */,
 				5A7A00000000000000000603 /* Widgets */,
 				5A7A00000000000000000604 /* Tests */,
+				5A7A00000000000000000605 /* UITests */,
 				5A7A00000000000000000702 /* Config */,
 				5A7A00000000000000000703 /* Support */,
 				5A7A00000000000000000205 /* Stay.storekit */,
@@ -130,6 +147,7 @@
 				5A7A00000000000000000201 /* Stay.app */,
 				5A7A00000000000000000202 /* StayWidgetsExtension.appex */,
 				5A7A00000000000000000203 /* StayTests.xctest */,
+				5A7A0000000000000000020B /* StayUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -210,6 +228,29 @@
 			productReference = 5A7A00000000000000000203 /* StayTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		5A7A00000000000000000404 /* StayUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5A7A00000000000000000941 /* Build configuration list for PBXNativeTarget "StayUITests" */;
+			buildPhases = (
+				5A7A00000000000000000831 /* Sources */,
+				5A7A00000000000000000832 /* Frameworks */,
+				5A7A00000000000000000833 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5A7A00000000000000001003 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				5A7A00000000000000000605 /* UITests */,
+			);
+			name = StayUITests;
+			packageProductDependencies = (
+			);
+			productName = StayUITests;
+			productReference = 5A7A0000000000000000020B /* StayUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -227,6 +268,10 @@
 						CreatedOnToolsVersion = 27.0;
 					};
 					5A7A00000000000000000403 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 5A7A00000000000000000401;
+					};
+					5A7A00000000000000000404 = {
 						CreatedOnToolsVersion = 27.0;
 						TestTargetID = 5A7A00000000000000000401;
 					};
@@ -252,6 +297,7 @@
 				5A7A00000000000000000401 /* Stay */,
 				5A7A00000000000000000402 /* StayWidgetsExtension */,
 				5A7A00000000000000000403 /* StayTests */,
+				5A7A00000000000000000404 /* StayUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -272,6 +318,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		5A7A00000000000000000823 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5A7A00000000000000000833 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -302,6 +355,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5A7A00000000000000000831 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -314,6 +374,11 @@
 			isa = PBXTargetDependency;
 			target = 5A7A00000000000000000401 /* Stay */;
 			targetProxy = 5A7A00000000000000000302 /* PBXContainerItemProxy */;
+		};
+		5A7A00000000000000001003 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5A7A00000000000000000401 /* Stay */;
+			targetProxy = 5A7A00000000000000000303 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -595,6 +660,36 @@
 			};
 			name = Release;
 		};
+		5A7A00000000000000000942 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(STAY_BUNDLE_ID).uitests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Stay;
+			};
+			name = Debug;
+		};
+		5A7A00000000000000000943 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(STAY_BUNDLE_ID).uitests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Stay;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -654,6 +749,15 @@
 			buildConfigurations = (
 				5A7A00000000000000000932 /* Debug */,
 				5A7A00000000000000000933 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5A7A00000000000000000941 /* Build configuration list for PBXNativeTarget "StayUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5A7A00000000000000000942 /* Debug */,
+				5A7A00000000000000000943 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

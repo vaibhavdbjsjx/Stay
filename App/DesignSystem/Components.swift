@@ -84,6 +84,43 @@ extension ButtonStyle where Self == SecondaryButtonStyle {
     static var staySecondary: SecondaryButtonStyle { SecondaryButtonStyle() }
 }
 
+// MARK: - Motion
+
+/// Fades and lifts content in on first appearance, staggered by `index`.
+/// Falls back to a plain fade when Reduce Motion is on.
+struct RevealModifier: ViewModifier {
+    var index: Int
+    @State private var shown = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func body(content: Content) -> some View {
+        content
+            .opacity(shown ? 1 : 0)
+            .offset(y: shown || reduceMotion ? 0 : 14)
+            .onAppear {
+                guard !shown else { return }
+                let animation: Animation = reduceMotion
+                    ? .easeOut(duration: 0.2)
+                    : .spring(response: 0.55, dampingFraction: 0.86).delay(Double(index) * 0.06)
+                withAnimation(animation) { shown = true }
+            }
+    }
+}
+
+extension View {
+    func reveal(_ index: Int = 0) -> some View { modifier(RevealModifier(index: index)) }
+}
+
+/// Subtle press feedback for tappable cards.
+struct PressableCardStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .opacity(configuration.isPressed ? 0.92 : 1)
+            .animation(.spring(response: 0.25, dampingFraction: 0.8), value: configuration.isPressed)
+    }
+}
+
 // MARK: - Small pieces
 
 struct Pill: View {
@@ -135,6 +172,8 @@ struct MetricTile: View {
             Text(value)
                 .font(StayFont.metric)
                 .foregroundStyle(StayPalette.ink)
+                .contentTransition(.numericText())
+                .animation(.snappy, value: value)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
             Text(label)

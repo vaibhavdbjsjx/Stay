@@ -213,11 +213,13 @@ struct SettingsView: View {
 
     private var aboutSection: some View {
         Section {
-            Button {
-                let subject = "Stay support".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-                if let url = URL(string: "mailto:\(AppConfig.supportEmail)?subject=\(subject)") { openURL(url) }
-            } label: {
-                Label("Contact support", systemImage: "envelope")
+            if AppConfig.hasSupportEmail {
+                Button {
+                    let subject = "Stay support".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+                    if let url = URL(string: "mailto:\(AppConfig.supportEmail)?subject=\(subject)") { openURL(url) }
+                } label: {
+                    Label("Contact support", systemImage: "envelope")
+                }
             }
             LabeledContent("Version", value: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0")
         } footer: {

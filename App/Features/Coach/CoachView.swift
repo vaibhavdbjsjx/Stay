@@ -12,8 +12,8 @@ struct CoachView: View {
                 if let dog = model.selectedDog {
                     VStack(alignment: .leading, spacing: 20) {
                         header
-                        if let tip { TodayTipCard(tip: tip) }
-                        weeklyCard(dog)
+                        if let tip { TodayTipCard(tip: tip).reveal(0) }
+                        weeklyCard(dog).reveal(1)
                         if dog.assessment.recommendsVet {
                             VetCard(dogName: dog.name)
                         }

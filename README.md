@@ -2,7 +2,7 @@
 
 A home-alone coach for dogs with separation anxiety. A spare iPhone or iPad becomes the **dog camera** (Camera mode); your own phone is **Owner mode**. Stay runs the graduated-absence protocol used by separation anxiety trainers: a short baseline, then daily missions that grow 10–20 % after calm sessions and step back after owner-confirmed distress, with departure-cue practice and rest days.
 
-SwiftUI · iOS 17+ · Swift 6 · no third-party dependencies · no backend · no account.
+SwiftUI · iOS 17+ · Swift 6 · one dependency (Google Sign-In, via Swift Package Manager) · no backend · accounts optional.
 
 ---
 
@@ -49,7 +49,8 @@ App/
                            Progress, Share (cards + video), Report (PDF), Coach, Settings, Paywall, Dogs
 Shared/                    Compiled into app + widget: palette, StayMark, DurationText, WidgetSnapshot, Live Activity attributes
 Widgets/                   Home/Lock Screen widget, Live Activity + Dynamic Island
-Tests/                     Engine, detection, progress, pairing, persistence, end-to-end review flow, coach
+Tests/                     Engine, detection, progress, pairing, persistence, review flow, coach, StoreKit purchases
+UITests/                   End-to-end UI flows (onboarding, mission, review, tabs, paywall, camera mode with permissions denied)
 website/                   Static marketing site + privacy, terms, support (GitHub Pages ready)
 ```
 
@@ -61,6 +62,7 @@ website/                   Static marketing site + privacy, terms, support (GitH
 - **Owner ⇄ camera link:**
   - *Same Wi-Fi:* MultipeerConnectivity (encrypted), matched by an 8-character link code. Carries start/stop, status, events and ~4 fps JPEG frames (real live view).
   - *Away from home (Pro):* CloudKit, no server of ours. The owner creates zone `StayLink-<code>` in their **private database** plus a zone-wide `CKShare`. The QR code contains the link code and share URL. If the camera uses the **same Apple Account**, it writes straight to the private zone; otherwise it accepts the share and writes via the **shared database**. Records: `LinkControl/control` (owner commands, polled by the camera every 3 s), `LinkStatus/status` (heartbeat every 10 s), `LinkSnapshot/snapshot` (every 5 s), `DistressEvent/<uuid>`. A `CKQuerySubscription` on `DistressEvent` creation pushes an alert to the owner even when Stay is closed; the owner then pulls zone changes and deletes processed events.
+- **Accounts:** `AccountService` handles Sign in with Apple (AuthenticationServices) and Google (GoogleSignIn). The identity is stored in the Keychain on the device only; it labels trainer reports and the phone when pairing. Revoked Apple credentials sign out automatically.
 - **Coach:** `CoachService` uses Apple Foundation Models (`SystemLanguageModel`, iOS 26+, when Apple Intelligence is available) with guard-railed instructions (no cure claims, no medication, suggest a vet). `RulesCoach` is the deterministic fallback and also feeds the model its facts.
 - **Sharing:** share cards are SwiftUI views rendered with `ImageRenderer` at 1080×1350. The “Day 1 vs Day N” video is rendered frame by frame (`ProgressVideoFrame`) into H.264 via `AVAssetWriter`, 1080×1920, 9 s. The last camera frame of every monitored session is saved for these.
 - **Trainer report:** multi-page US Letter PDF rendered from SwiftUI pages (`TrainerReport`), previewed with PDFKit.
@@ -74,8 +76,17 @@ Pro: unlimited missions, iCloud alerts + near-live view away from home, weekly i
 
 ## App Store Connect checklist
 
+### Sign-in (optional for users, set up once by you)
+- **Sign in with Apple:** enable the *Sign in with Apple* capability on the App ID `<prefix>.stay` (the entitlement is already in `Support/Stay.entitlements`). Nothing else is needed: Stay keeps no server account.
+- **Google (Gmail) sign-in:** in [Google Cloud Console](https://console.cloud.google.com/) › APIs & Services › OAuth consent screen, configure an External app (name "Stay", your support email, privacy URL). Then Credentials › Create credentials › OAuth client ID › **iOS**, bundle ID `<prefix>.stay`. Copy the client ID into `STAY_GOOGLE_CLIENT_ID` and the "iOS URL scheme" (reversed client ID) into `STAY_GOOGLE_REVERSED_CLIENT_ID` in `Config/Shared.xcconfig`. Until you do, the Google button is hidden automatically, so no broken button ever ships.
+- Accounts are optional (guideline 5.1.1): users can try everything without signing in. **Delete account** is in Settings › Account; Google tokens are revoked on deletion. Sign in with Apple and Google appear with equal prominence (guideline 4.8).
+
+### Website (GitHub Pages)
+- Repo › Settings › Pages › Source: **GitHub Actions**. The included workflow `.github/workflows/pages.yml` publishes `website/` to `https://vaibhavdbjsjx.github.io/Stay/`, which is what the app's Privacy/Terms/Support links use (`AppConfig.websiteURL`).
+- Replace `support@example.com` in `App/Core/AppConfig.swift` and `website/*.html`. The in-app "Contact support" row stays hidden until a real address is set.
+
 ### Identifiers & capabilities (developer.apple.com › Identifiers)
-- [ ] App ID `<prefix>.stay` with: **iCloud** (CloudKit, container `iCloud.<prefix>.stay`), **Push Notifications**, **App Groups** (`group.<prefix>.stay`).
+- [ ] App ID `<prefix>.stay` with: **iCloud** (CloudKit, container `iCloud.<prefix>.stay`), **Push Notifications**, **App Groups** (`group.<prefix>.stay`), **Sign in with Apple**.
 - [ ] App ID `<prefix>.stay.widgets` with **App Groups** (`group.<prefix>.stay`).
 - [ ] Create the iCloud container and the App Group.
 - [ ] In Xcode, check Signing & Capabilities for both targets shows those capabilities; Background Modes › **Remote notifications** is already set in `Support/Stay-Info.plist`.

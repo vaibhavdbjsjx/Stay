@@ -82,6 +82,7 @@ struct MissionBriefView: View {
                     Label(isBaseline ? String(localized: "Start baseline") : String(localized: "I'm leaving now"), systemImage: "figure.walk.departure")
                 }
                 .buttonStyle(.stayPrimary(StayPalette.apricot))
+                .accessibilityIdentifier("brief.start")
                 .padding(.horizontal, 20)
                 .padding(.bottom, 8)
             }
