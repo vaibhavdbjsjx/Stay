@@ -6,6 +6,8 @@
 	<string>$(STAY_APP_GROUP)</string>
 	<key>StayICloudContainer</key>
 	<string>$(STAY_ICLOUD_CONTAINER)</string>
+	<key>GIDClientID</key>
+	<string>$(STAY_GOOGLE_CLIENT_ID)</string>
 	<key>CKSharingSupported</key>
 	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -39,6 +41,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>stay</string>
+				<string>$(STAY_GOOGLE_REVERSED_CLIENT_ID)</string>
 			</array>
 		</dict>
 	</array>

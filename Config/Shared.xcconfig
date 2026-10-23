@@ -16,3 +16,9 @@ STAY_TEAM_ID =
 STAY_BUNDLE_ID = $(STAY_BUNDLE_PREFIX).stay
 STAY_APP_GROUP = group.$(STAY_BUNDLE_PREFIX).stay
 STAY_ICLOUD_CONTAINER = iCloud.$(STAY_BUNDLE_PREFIX).stay
+
+// 3. Google Sign-In (optional). From Google Cloud Console → Credentials → OAuth client ID (iOS).
+//    Leave empty to hide the Google button. The reversed ID is the client ID with its parts reversed,
+//    e.g. com.googleusercontent.apps.1234-abcd
+STAY_GOOGLE_CLIENT_ID =
+STAY_GOOGLE_REVERSED_CLIENT_ID = com.googleusercontent.apps.not-configured

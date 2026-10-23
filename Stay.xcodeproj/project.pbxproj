@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A7A00000000000000001101 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 5A7A00000000000000001201 /* GoogleSignIn */; };
+		5A7A00000000000000001102 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 5A7A00000000000000001202 /* GoogleSignInSwift */; };
 		5A7A00000000000000000101 /* StayWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5A7A00000000000000000202 /* StayWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -66,6 +68,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A7A00000000000000001101 /* GoogleSignIn in Frameworks */,
+				5A7A00000000000000001102 /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +157,8 @@
 			);
 			name = Stay;
 			packageProductDependencies = (
+				5A7A00000000000000001201 /* GoogleSignIn */,
+				5A7A00000000000000001202 /* GoogleSignInSwift */,
 			);
 			productName = Stay;
 			productReference = 5A7A00000000000000000201 /* Stay.app */;
@@ -235,6 +241,9 @@
 			);
 			mainGroup = 5A7A00000000000000000701;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5A7A00000000000000001301 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5A7A00000000000000000704 /* Products */;
 			projectDirPath = "";
@@ -587,6 +596,30 @@
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5A7A00000000000000001301 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5A7A00000000000000001201 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5A7A00000000000000001301 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		5A7A00000000000000001202 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5A7A00000000000000001301 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCConfigurationList section */
 		5A7A00000000000000000901 /* Build configuration list for PBXProject "Stay" */ = {

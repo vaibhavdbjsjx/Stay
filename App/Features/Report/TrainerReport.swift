@@ -21,7 +21,7 @@ enum TrainerReport {
 
         let chunks = stride(from: 0, to: max(sessions.count, 1), by: rowsPerPage).map { Array(sessions.dropFirst($0).prefix(rowsPerPage)) }
         let totalPages = 1 + (sessions.isEmpty ? 0 : chunks.count)
-        var pages: [AnyView] = [AnyView(SummaryPage(dog: dog, photo: model.photo(for: dog), snapshot: snapshot, reviewed: reviewed, journal: model.journal(for: dog.id), total: totalPages))]
+        var pages: [AnyView] = [AnyView(SummaryPage(dog: dog, photo: model.photo(for: dog), owner: model.account.account?.displayName, snapshot: snapshot, reviewed: reviewed, journal: model.journal(for: dog.id), total: totalPages))]
         if !sessions.isEmpty {
             for (index, chunk) in chunks.enumerated() {
                 pages.append(AnyView(SessionsPage(dogName: dog.name, sessions: chunk, page: index + 2, total: totalPages)))
@@ -75,6 +75,7 @@ private struct PageFrame<Content: View>: View {
 private struct SummaryPage: View {
     var dog: Dog
     var photo: UIImage?
+    var owner: String?
     var snapshot: ProgressSnapshot
     var reviewed: [AbsenceSession]
     var journal: [JournalEntry]
@@ -94,6 +95,7 @@ private struct SummaryPage: View {
                         Text(dog.name).font(.system(size: 26, weight: .semibold, design: .serif))
                         Text([dog.breed, dog.ageDescription].filter { !$0.isEmpty }.joined(separator: " · ")).font(.system(size: 12)).foregroundStyle(muted)
                         Text("Starting level: \(dog.severity.title) (intake score \(dog.assessment.score))").font(.system(size: 12)).foregroundStyle(muted)
+                        if let owner { Text("Prepared by \(owner)").font(.system(size: 12)).foregroundStyle(muted) }
                     }
                 }
                 .foregroundStyle(ink)

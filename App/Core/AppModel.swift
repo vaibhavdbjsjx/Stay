@@ -20,6 +20,7 @@ final class AppModel {
     private(set) var db: StayDatabase
     let store: DataStore
     let purchases = PurchaseManager()
+    let account = AccountService()
     let coach = CoachService()
     let nearby = NearbyLink()
     let cloud = CloudRelay()
@@ -51,6 +52,7 @@ final class AppModel {
     /// Called once the UI is up.
     func launch() async {
         await purchases.load()
+        await account.verifyOnLaunch()
         liveActivity.endStaleActivities(keeping: activeSession?.id)
         connectLinks()
         refreshWidget()
@@ -446,7 +448,7 @@ final class AppModel {
     /// Owner: create a pairing code (and CloudKit share when iCloud is available).
     func preparePairing() async -> (payload: PairingPayload, cloudError: String?) {
         let linkID = db.preferences.link?.linkID ?? PairingPayload.makeLinkID()
-        let name = UIDevice.current.name
+        let name = account.account?.displayName ?? UIDevice.current.name
         if let existing = db.preferences.link, existing.database == .privateDB, existing.shareURL != nil {
             return (PairingPayload(linkID: linkID, shareURL: existing.shareURL, ownerName: name), nil)
         }

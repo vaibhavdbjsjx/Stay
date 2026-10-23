@@ -14,6 +14,7 @@ struct OnboardingFlow: View {
         case ownerPermissions
         case cameraPermissions
         case cameraPairing
+        case account
     }
 
     @State private var path: [Step] = []
@@ -44,9 +45,11 @@ struct OnboardingFlow: View {
                             path.append(.ownerPermissions)
                         }
                     case .ownerPermissions:
-                        OwnerPermissionsStep { model.completeOnboarding() }
+                        OwnerPermissionsStep { path.append(.account) }
                     case .cameraPermissions:
                         CameraPermissionsStep { path.append(.cameraPairing) }
+                    case .account:
+                        AccountOnboardingStep { model.completeOnboarding() }
                     case .cameraPairing:
                         CameraPairingStep { model.completeOnboarding() }
                     }

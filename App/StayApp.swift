@@ -13,12 +13,14 @@ struct StayApp: App {
             RootView()
                 .environment(model)
                 .environment(model.purchases)
+                .environment(model.account)
                 .tint(StayPalette.sage)
                 .task {
                     appDelegate.model = model
                     await model.launch()
                 }
                 .onOpenURL { url in
+                    if model.account.handle(url: url) { return }
                     if let payload = PairingPayload(url: url) {
                         model.pendingPairing = payload
                     }
